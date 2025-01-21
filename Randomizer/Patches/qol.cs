@@ -52,6 +52,7 @@ namespace Celeste.Mod.Randomizer
             IL.Celeste.LightningRenderer.Track += TrackExtraSpace;
             On.Celeste.LockBlock.OnPlayer += NoKeySkips;
             On.Celeste.Player.Update += PreventInvincibility;
+            On.Celeste.Booster.OnPlayer += StayBehindBubble;
 
             // https://github.com/EverestAPI/CelesteTAS-EverestInterop/blob/master/CelesteTAS-EverestInterop/EverestInterop/DisableAchievements.cs
             // Before hooking Achievements.Register, check the size of the method.
@@ -112,6 +113,7 @@ namespace Celeste.Mod.Randomizer
             IL.Celeste.HeartGem.Awake -= SpecialHeartColors;
             On.Celeste.LockBlock.OnPlayer -= NoKeySkips;
             On.Celeste.Player.Update -= PreventInvincibility;
+            On.Celeste.Booster.OnPlayer -= StayBehindBubble;
 
 
             foreach (var detour in this.SpecialHooksQol)
@@ -770,6 +772,11 @@ namespace Celeste.Mod.Randomizer
             orig(self);
         }
 
+        public static void StayBehindBubble(On.Celeste.Booster.orig_OnPlayer orig, Booster self, Player player)
+        {
+            player.Depth = 0;
+            orig(self, player);
+        }
     }
 
     public class DisablableTextMenu : TextMenu
